@@ -29,7 +29,7 @@ export const signUp = async (userData: SignUpParams) => {
       ID.unique(),
       email,
       password,
-      `${firstName} + ${lastName}`
+      `${firstName}  ${lastName}`
     );
 
     const session = await account.createEmailPasswordSession(email, password);
@@ -56,5 +56,17 @@ export async function getLoggedInUser() {
     return parseStringify(user)
   } catch (error) {
     return null;
+  }
+}
+
+export const logoutAccount = async () =>{
+  try {
+    const {account} = await createSessionClient();
+
+    cookies().delete('appwrite-session')
+
+    await account.deleteSession('current')
+  } catch (error) {
+    
   }
 }
