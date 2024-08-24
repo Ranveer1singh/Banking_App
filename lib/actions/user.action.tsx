@@ -8,9 +8,13 @@ import { redirect } from "next/navigation";
 import { createSessionClient } from "../appwrite";
 import { parseStringify } from "../utils";
 
-export const signIn = async () => {
+export const signIn = async ({email , password}:signInProps) => {
   try {
     // Mutation / DataBase / Make Fetch
+    const { account } = await createAdminClient();
+    const response = await account.createEmailPasswordSession(email, password)
+
+    return parseStringify(response)
   } catch (error) {
     console.error("error", error);
   }
@@ -48,7 +52,8 @@ export const signUp = async (userData: SignUpParams) => {
 export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
-    return await account.get();
+    const user =  await account.get();
+    return parseStringify(user)
   } catch (error) {
     return null;
   }
